@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import { addTodos, removeTodos } from "../redux/todoSlice";
+import { addTodos, removeTodos, updateTodos } from "../redux/todoSlice";
 import { v4 as uuidv4 } from "uuid"; // uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 
 //following function transform State into Props.
@@ -24,35 +24,38 @@ const mapDispatchToProps = (dispatch) => {
     addTodo: (obj) => dispatch(addTodos(obj)),
     //removing method clone from original removeTodos from todoSlice.js
     removeTodo: (ID) => dispatch(removeTodos(ID)),
+    //updating method clone from original updateTodos from todoSlice.js
+    updateTodo: (obj) => dispatch(updateTodos(obj)),
   };
 };
 
 const Todos = (props) => {
-  console.log("Props:", props);
 
   /*
    ********************* DESTRUCTURING AREA *********************
    */
-  const { todos, addTodo, removeTodo } = props; // props is a object {todos: Array(0), addTodo: ƒ}
+  const { todos, addTodo, removeTodo, updateTodo } = props; // props is a object {todos: Array(0), addTodo: ƒ}
 
   /*
    ********************* USING HOOKS AREA *********************
    */
   const [todo, setTodo] = useState("");
 
+  const inputRef = useRef(true);
+  console.log("gelen inputRef:", inputRef);
+
   useEffect(() => {
     // this is for initial value (todo) again and in input value will have been empty after click button
     setTodo("");
   }, [todos]); //just todos change invoked this useEffect.
 
-  console.log("todos", todos);
 
   /*
    ********************* CUSTOM FUNCTIONS AREA *********************
    */
 
   //following method for input area
-  const handleClick = (event) => {
+  const addClick = (event) => {
     addTodo({
       id: uuidv4(),
       item: todo, // todo is value of input area from user
@@ -65,8 +68,20 @@ const Todos = (props) => {
   };
   //following method for button of REMOVE
   const removeClick = (ID) => {
-    console.log("gelen id:", ID);
     removeTodo(ID);
+  };
+  //updating method for button of UPDATE
+  const handleUpdate = (id, value, event) => {
+    console.log("glen event.wvhich:", event.which);
+    if(event.which===13){ //13 number for enter. when user press enter event.which turns 13 number.
+      updateTodo({id, item:value});
+      inputRef.current.disabled=true;
+    }
+    //updateTodo(obj);
+  };
+  const changeInputRef = () => {
+    inputRef.current.disabled = false;
+    inputRef.current.focus();
   };
 
   return (
@@ -77,7 +92,7 @@ const Todos = (props) => {
         className="todo-input"
         value={todo}
       />
-      <button className="add-btn" onClick={(e) => handleClick(e)}>
+      <button className="add-btn" onClick={(e) => addClick(e)}>
         ADD
       </button>
       <br></br>
@@ -87,7 +102,13 @@ const Todos = (props) => {
           {todos.map((todo) => {
             return (
               <li key={todo.id}>
-                {todo.item}
+                <textarea
+                  ref={inputRef}
+                  disabled={inputRef.current}
+                  defaultValue={todo.item}
+                  onKeyPress={(e)=>handleUpdate(todo.id,inputRef.current.value,e)}
+                />
+                <button onClick={() => changeInputRef()}>EDIT</button>
                 <button onClick={() => removeClick(todo.id)}>DELETE</button>
               </li>
             );
