@@ -49,6 +49,7 @@ const todoSlice = createSlice({
             completed: true,
           };
         }
+        console.log("GELMEYEN ID");
         return todo;
       });
     },
