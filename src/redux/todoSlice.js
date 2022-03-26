@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = [
-];
+const initialState = [];
 
 const todoSlice = createSlice({
   name: "todos",
@@ -23,28 +22,39 @@ const todoSlice = createSlice({
     //updating method for todos
     updateTodos: (state, action) => {
       return state.map((todo) => {
-        /* //if we dont use ternary (condition ? true : false) we should use if-else structure
                 if (todo.id === action.payload.id) {
                     return {
                         ...todo,
                         item: action.payload.item,
-                        completed: action.payload.completed,
+                        //completed: action.payload.completed,
                     }
                 }
-                return todo;
-                totaly same with following code
-                */
-        return todo.id === action.payload.id
+                return todo;                
+        /*return todo.id === action.payload.id
           ? {
               ...todo,
               item: action.payload.item,
               //completed: action.payload.completed,
             }
-          : todo;
+          : todo;*/
+      });
+    },
+    //Completed method for todos
+    completeTodos: (state, action) => {
+      return state.map((todo) => {
+        if (todo.id === action.payload) {
+            console.log("gelen ID:", action.payload)
+          return {
+            ...todo,
+            completed: true,
+          };
+        }
+        return todo;
       });
     },
   },
 });
 
 export const reducerTodo = todoSlice.reducer;
-export const { addTodos, removeTodos, updateTodos } = todoSlice.actions;
+export const { addTodos, removeTodos, updateTodos, completeTodos } =
+  todoSlice.actions;
