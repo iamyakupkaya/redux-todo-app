@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { addTodos } from "../redux/todoSlice";
 import { v4 as uuidv4 } from "uuid"; // uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 import { GoPlus } from "react-icons/go";
+import { motion } from "framer-motion";
 
 //following function transform State into Props.
 // it also like a binding (map) state bindin to props
@@ -32,7 +33,7 @@ const Todos = (props) => {
   const { todos, addTodo } = props; // props is a object {todos: Array(0), addTodo: ƒ}
 
   const [todoInput, setTodoInput] = useState("");
-  const refInputFocus=useRef();
+  const refInputFocus = useRef();
   useEffect(() => {
     // this is for initial value (todo) again and in input value will have been empty after click button
     setTodoInput("");
@@ -40,11 +41,15 @@ const Todos = (props) => {
 
   //following method for input area
   const addTodoButton = () => {
-    addTodo({
-      id: uuidv4(),
-      item: todoInput, // todo is value of input area from user
-      completed: false,
-    });
+    if (todoInput === "") {
+      alert("Input is Empty");
+    } else {
+      addTodo({
+        id: uuidv4(),
+        item: todoInput, // todo is value of input area from user
+        completed: false,
+      });
+    }
     refInputFocus.current.focus();
   };
   const toInvokeAddTodoButton = (event) => {
@@ -64,9 +69,14 @@ const Todos = (props) => {
         onKeyPress={(event) => toInvokeAddTodoButton(event)}
         ref={refInputFocus}
       />
-      <button className="add-btn" onClick={() => addTodoButton()}>
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="add-btn"
+        onClick={() => addTodoButton()}
+      >
         <GoPlus />
-      </button>
+      </motion.button>
     </div>
   );
 };
