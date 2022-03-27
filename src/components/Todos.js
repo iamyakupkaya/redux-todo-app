@@ -4,6 +4,9 @@ import { addTodos } from "../redux/todoSlice";
 import { v4 as uuidv4 } from "uuid"; // uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 import { GoPlus } from "react-icons/go";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 //following function transform State into Props.
 // it also like a binding (map) state bindin to props
@@ -37,20 +40,48 @@ const Todos = (props) => {
   useEffect(() => {
     // this is for initial value (todo) again and in input value will have been empty after click button
     setTodoInput("");
+    //todos.length <= 0 ? dummyMethod() : toastAdd();
   }, [todos]); //just todos change invoked this useEffect.
 
+  const dummyMethod = () => {};
   //following method for input area
   const addTodoButton = () => {
     if (todoInput === "") {
-      alert("Input is Empty");
+      toastError();
     } else {
       addTodo({
         id: uuidv4(),
         item: todoInput, // todo is value of input area from user
         completed: false,
       });
+      toastAdd();
     }
     refInputFocus.current.focus();
+  };
+
+  const toastAdd = () => {
+    toast.success("Bravo! You have a thing to do :)", {
+      position: "bottom-left",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  };
+  const toastError = () => {
+    toast.error("You write nothing to do :)", {
+      position: "bottom-left",
+      autoClose: 1000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
   };
   const toInvokeAddTodoButton = (event) => {
     //for onKeyDown we should use event.keyCode===13 :)
@@ -77,6 +108,17 @@ const Todos = (props) => {
       >
         <GoPlus />
       </motion.button>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { IoCheckmarkDoneSharp, IoClose } from "react-icons/io5";
+import { motion } from "framer-motion";
 
 const TodoItem = (props) => {
   console.log("TodoItem gelen props:", props);
@@ -26,28 +27,64 @@ const TodoItem = (props) => {
   };
 
   return (
-    <li key={item.id} className="card">
+    <motion.li
+      initial={{
+        x: "150vw",
+        transition: { type: "spring", duration: 2 },
+      }}
+      animate={{
+        x: 0,
+        transition: { type: "spring", duration: 2 },
+      }}
+      whileHover={{
+        scale: 1,
+        transition: { type: "spring", duration: 1 },
+      }}
+      exit={{
+        x: "-60vw",
+        scale: [1, 0],
+        transition: { duration: 2 },
+        backgroundColor: "rgba(255,0,0,1)",
+      }}
+      key={item.id}
+      className="card"
+    >
       <textarea
         ref={inputRef}
         disabled={inputRef}
         defaultValue={item.item}
         onKeyPress={(e) => handleUpdate(item.id, inputRef.current.value, e)}
       />
+
       <div className="btns">
-        <button style={{ color: "green" }} onClick={() => changeFocus()}>
+        <motion.button
+          whileHover={{ scale: 1.8 }}
+          whileTap={{ scale: 0.9 }}
+          style={{ color: "green" }}
+          onClick={() => changeFocus()}
+        >
           <AiFillEdit />
-        </button>
+        </motion.button>
         {item.completed === false && (
-          <button onClick={() => completeTodo(item.id)}>
+          <motion.button
+            whileHover={{ scale: 1.8 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => completeTodo(item.id)}
+          >
             <IoCheckmarkDoneSharp />
-          </button>
+          </motion.button>
         )}
-        <button style={{ color: "red" }} onClick={() => removeTodo(item.id)}>
+        <motion.button
+          whileHover={{ scale: 1.8 }}
+          whileTap={{ scale: 0.9 }}
+          style={{ color: "red" }}
+          onClick={() => removeTodo(item.id)}
+        >
           <IoClose />
-        </button>
+        </motion.button>
       </div>
       {item.completed && <span className="completed">DONE</span>}
-    </li>
+    </motion.li>
   );
 };
 export default TodoItem;
