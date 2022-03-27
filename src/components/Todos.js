@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { addTodos } from "../redux/todoSlice";
 import { v4 as uuidv4 } from "uuid"; // uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+import { GoPlus } from "react-icons/go";
 
 //following function transform State into Props.
 // it also like a binding (map) state bindin to props
@@ -27,12 +28,11 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const Todos = (props) => {
-
-  console.log("Todos.js gelen props:",props);
+  console.log("Todos.js gelen props:", props);
   const { todos, addTodo } = props; // props is a object {todos: Array(0), addTodo: ƒ}
 
   const [todoInput, setTodoInput] = useState("");
-
+  const refInputFocus=useRef();
   useEffect(() => {
     // this is for initial value (todo) again and in input value will have been empty after click button
     setTodoInput("");
@@ -45,6 +45,13 @@ const Todos = (props) => {
       item: todoInput, // todo is value of input area from user
       completed: false,
     });
+    refInputFocus.current.focus();
+  };
+  const toInvokeAddTodoButton = (event) => {
+    //for onKeyDown we should use event.keyCode===13 :)
+    if (event.which === 13) {
+      addTodoButton();
+    }
   };
 
   return (
@@ -54,9 +61,11 @@ const Todos = (props) => {
         onChange={(event) => setTodoInput(event.target.value)}
         className="todo-input"
         value={todoInput}
+        onKeyPress={(event) => toInvokeAddTodoButton(event)}
+        ref={refInputFocus}
       />
       <button className="add-btn" onClick={() => addTodoButton()}>
-        ADD
+        <GoPlus />
       </button>
     </div>
   );

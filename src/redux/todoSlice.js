@@ -43,13 +43,11 @@ const todoSlice = createSlice({
     completeTodos: (state, action) => {
       return state.map((todo) => {
         if (todo.id === action.payload) {
-            console.log("gelen ID:", action.payload)
           return {
             ...todo,
             completed: true,
           };
         }
-        console.log("GELMEYEN ID");
         return todo;
       });
     },
