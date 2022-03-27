@@ -40,7 +40,7 @@ const Todos = (props) => {
   useEffect(() => {
     // this is for initial value (todo) again and in input value will have been empty after click button
     setTodoInput("");
-    //todos.length <= 0 ? dummyMethod() : toastAdd();
+    todos.length <= 0 ? dummyMethod() : toastAdd();
   }, [todos]); //just todos change invoked this useEffect.
 
   const dummyMethod = () => {};
@@ -54,7 +54,6 @@ const Todos = (props) => {
         item: todoInput, // todo is value of input area from user
         completed: false,
       });
-      toastAdd();
     }
     refInputFocus.current.focus();
   };
